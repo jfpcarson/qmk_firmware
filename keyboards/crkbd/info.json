@@ -9,7 +9,7 @@
         "bootmagic": true,
         "extrakey": true,
         "nkro": true,
-        "oled": true,
+        "oled": false,
         "rgblight": false,
         "rgb_matrix": true
     },
@@ -130,9 +130,9 @@
     },
     "rgb_matrix": {
         "driver": "ws2812",
-        "max_brightness": 255
+        "max_brightness": 220
     },
     "rgblight": {
-        "max_brightness": 255
+        "max_brightness": 220
     }
 }

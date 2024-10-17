@@ -12,7 +12,6 @@ enum tap_dance_codes {
 };
 
 
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         [0] = LAYOUT_split_3x5_3(
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
@@ -27,11 +26,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         [1] = LAYOUT_split_3x5_3(
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
-          KC_NO,           KC_NO,          KC_NO,          KC_NO,      KC_NO,                                               KC_NO,    C(KC_C),        C(KC_V),          KC_NO,           KC_NO,
+          KC_NO,           KC_NO,          KC_NO,          KC_NO,      KC_NO,                                         TD(DANCE_0),    C(KC_C),        C(KC_V),        CW_TOGG,           KC_NO,
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
-        KC_LGUI,         KC_LSFT,        KC_LCTL,        KC_LALT,      KC_NO,                                             CW_TOGG,    KC_PGUP,        KC_PGDN,        KC_HOME,          KC_END,
+        KC_LGUI,         KC_LSFT,        KC_LCTL,        KC_LALT,      KC_NO,                                             KC_LEFT,    KC_DOWN,          KC_UP,        KC_RGHT,           KC_NO,
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
-          KC_NO,           KC_NO,          KC_NO,          KC_NO,      KC_NO,                                         TD(DANCE_0),    KC_LEFT,        KC_RGHT,          KC_UP,         KC_DOWN,
+          KC_NO,           KC_NO,          KC_NO,          KC_NO,      KC_NO,                                             KC_HOME,    KC_PGDN,        KC_PGUP,        KC_END,            KC_NO,
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
                                                       KC_TRNS,         KC_TRNS,         KC_NO,                KC_TAB,     KC_ENT,    KC_DEL),
                                              //|-------------+----------------+---------------|        |------------+-----------+-----------|
@@ -61,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         [4] = LAYOUT_split_3x5_3(
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
-          KC_NO,           KC_NO,          KC_NO,        RGB_TOG,    QK_BOOT,                                               KC_F7,      KC_F8,          KC_F9,        RGB_TOG,          KC_F12,
+        AC_TOGG,           KC_NO,          KC_NO,        RGB_TOG,    QK_BOOT,                                               KC_F7,      KC_F8,          KC_F9,          KC_NO,          KC_F12,
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
         KC_TRNS,         KC_TRNS,        KC_TRNS,        KC_TRNS,      KC_NO,                                               KC_F4,      KC_F5,          KC_F6,          KC_NO,          KC_F11,
 //|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
@@ -99,16 +98,24 @@ void keyboard_post_init_user(void) {
 bool rgb_matrix_indicators_user(void) {
     uint8_t left_win = 16;
     uint8_t left_shift = 13;
-    // uint8_t left_ctrl = 10;
-    // uint8_t left_alt = 6;
-    // uint8_t right_win = 16;
-    // uint8_t right_shift = 16;
-    // uint8_t right_ctrl = 16;
-    // uint8_t right_alt = 16;
+    uint8_t left_ctrl = 10;
+    uint8_t left_alt = 5;
+    uint8_t right_alt = 25;
+    uint8_t right_ctrl = 30;
+    uint8_t right_shift = 33;
+    uint8_t right_win = 36;
+
+    HSV hsv_red = {HSV_RED};
+    hsv_red.v   = rgb_matrix_config.hsv.v;
+    RGB rgb_red = hsv_to_rgb(hsv_red);
+
+    HSV hsv_gold = {HSV_GOLD};
+    hsv_gold.v   = rgb_matrix_config.hsv.v;
+    RGB rgb_gold = hsv_to_rgb(hsv_gold);
 
     switch (get_highest_layer(layer_state)) {
         
-        case 5:
+        case 5: //mouse layer
             rgb_matrix_set_color_all(0,0,0);
             HSV hsv_purple = {HSV_PURPLE};
             hsv_purple.v   = rgb_matrix_config.hsv.v;
@@ -119,46 +126,42 @@ bool rgb_matrix_indicators_user(void) {
             // mod keys LHS/
             rgb_matrix_set_color(left_win, rgb_purple.r, rgb_purple.g, rgb_purple.b);
             rgb_matrix_set_color(left_shift, rgb_purple.r, rgb_purple.g, rgb_purple.b);
-            rgb_matrix_set_color(19, rgb_purple.r, rgb_purple.g, rgb_purple.b);
-            rgb_matrix_set_color(22, rgb_purple.r, rgb_purple.g, rgb_purple.b);
+            rgb_matrix_set_color(left_ctrl, rgb_purple.r, rgb_purple.g, rgb_purple.b);
+            rgb_matrix_set_color(left_alt, rgb_purple.r, rgb_purple.g, rgb_purple.b);
 
-            rgb_matrix_set_color(37, rgb_orange.r, rgb_orange.g, rgb_orange.b);
-            rgb_matrix_set_color(38, rgb_purple.r, rgb_purple.g, rgb_purple.b);
-            rgb_matrix_set_color(43, rgb_purple.r, rgb_purple.g, rgb_purple.b);
-            rgb_matrix_set_color(44, rgb_purple.r, rgb_purple.g, rgb_purple.b); 
-            rgb_matrix_set_color(45, rgb_orange.r, rgb_orange.g, rgb_orange.b);
-            rgb_matrix_set_color(46, rgb_purple.r, rgb_purple.g, rgb_purple.b);
+            rgb_matrix_set_color(24, rgb_orange.r, rgb_orange.g, rgb_orange.b);
+            rgb_matrix_set_color(right_alt, rgb_purple.r, rgb_purple.g, rgb_purple.b);
+            rgb_matrix_set_color(31, rgb_purple.r, rgb_purple.g, rgb_purple.b);
+            rgb_matrix_set_color(right_ctrl, rgb_purple.r, rgb_purple.g, rgb_purple.b); 
+            rgb_matrix_set_color(right_shift, rgb_purple.r, rgb_purple.g, rgb_purple.b);
+            rgb_matrix_set_color(32, rgb_orange.r, rgb_orange.g, rgb_orange.b);
             break;
-        case 4:
+        case 4: //function layer
             rgb_matrix_set_color_all(0,0,0);
-            HSV hsv_red = {HSV_RED};
-            hsv_red.v   = rgb_matrix_config.hsv.v;
-            RGB rgb_red = hsv_to_rgb(hsv_red);
-            HSV hsv_gold = {HSV_GOLD};
-            hsv_gold.v   = rgb_matrix_config.hsv.v;
-            RGB rgb_gold = hsv_to_rgb(hsv_gold);
+
+
             // mod keys LHS/
-            rgb_matrix_set_color(9, rgb_gold.r, rgb_gold.g, rgb_gold.b);
-            rgb_matrix_set_color(10, rgb_gold.r, rgb_gold.g, rgb_gold.b);
+            rgb_matrix_set_color(3, rgb_gold.r, rgb_gold.g, rgb_gold.b);
+            rgb_matrix_set_color(4, rgb_gold.r, rgb_gold.g, rgb_gold.b);
             rgb_matrix_set_color(left_win, rgb_red.r, rgb_red.g, rgb_red.b);
             rgb_matrix_set_color(left_shift, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(19, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(22, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(left_ctrl, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(left_alt, rgb_red.r, rgb_red.g, rgb_red.b);
 
-            rgb_matrix_set_color(34, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(35, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(21, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(22, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(23, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(24, rgb_red.r, rgb_red.g, rgb_red.b); 
+            rgb_matrix_set_color(25, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(26, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(28, rgb_red.r, rgb_red.g, rgb_red.b); 
+            rgb_matrix_set_color(29, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(30, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(31, rgb_red.r, rgb_red.g, rgb_red.b);
             rgb_matrix_set_color(36, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(37, rgb_red.r, rgb_red.g, rgb_red.b); 
-            rgb_matrix_set_color(38, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(39, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(41, rgb_red.r, rgb_red.g, rgb_red.b); 
-            rgb_matrix_set_color(42, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(43, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(44, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(49, rgb_red.r, rgb_red.g, rgb_red.b);
-            rgb_matrix_set_color(50, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(37, rgb_red.r, rgb_red.g, rgb_red.b);
             break;
-        case 3:
+        case 3: //numpad
             rgb_matrix_set_color_all(0,0,0);
             HSV hsv_turquoise = {HSV_TURQUOISE};
             hsv_turquoise.v   = rgb_matrix_config.hsv.v;
@@ -166,21 +169,24 @@ bool rgb_matrix_indicators_user(void) {
             // mod keys LHS/
             rgb_matrix_set_color(left_win, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
             rgb_matrix_set_color(left_shift, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(19, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(22, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(left_ctrl, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(left_alt, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
 
-            rgb_matrix_set_color(34, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(35, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(36, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(37, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b); 
-            rgb_matrix_set_color(38, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(39, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(41, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b); 
-            rgb_matrix_set_color(42, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(43, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
-            rgb_matrix_set_color(44, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(21, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(22, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(23, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(24, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b); 
+            rgb_matrix_set_color(25, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(26, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(28, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b); 
+            rgb_matrix_set_color(29, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(30, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            rgb_matrix_set_color(31, rgb_turquoise.r, rgb_turquoise.g, rgb_turquoise.b);
+            
+            rgb_matrix_set_color(35, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(36, rgb_red.r, rgb_red.g, rgb_red.b);
             break;
-        case 2:
+        case 2: //symbols
             rgb_matrix_set_color_all(0,0,0);
             HSV hsv_yellow = {HSV_YELLOW};
             hsv_yellow.v   = rgb_matrix_config.hsv.v;
@@ -188,72 +194,71 @@ bool rgb_matrix_indicators_user(void) {
             // mod keys LHS/
             rgb_matrix_set_color(left_win, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
             rgb_matrix_set_color(left_shift, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
-            rgb_matrix_set_color(19, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
-            rgb_matrix_set_color(22, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
+            rgb_matrix_set_color(left_ctrl, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
+            rgb_matrix_set_color(left_alt, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
 
-            rgb_matrix_set_color(34, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
-            rgb_matrix_set_color(35, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
-            rgb_matrix_set_color(36, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
-            rgb_matrix_set_color(37, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b); 
-            rgb_matrix_set_color(38, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
-            rgb_matrix_set_color(44, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);          
+            rgb_matrix_set_color(21, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
+            rgb_matrix_set_color(22, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b); 
+            rgb_matrix_set_color(23, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
+            rgb_matrix_set_color(24, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
+            rgb_matrix_set_color(25, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);          
+            rgb_matrix_set_color(31, rgb_yellow.r, rgb_yellow.g, rgb_yellow.b);
             break;
-        case 1:
+
+//|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
+//     17,             12,             11,             4,            3,                                                   23,         24,           31,            32,              37,
+//|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
+//     16,             13,             10,             5,            2,                                                   22,         25,           30,            33,              36,
+//|------------+----------------+---------------+---------------+-----------|                                       |-----------+-----------+---------------+---------------+----------------|
+//     15,             14,             9,              6,            1,                                                   21,         26,           29,            34,              35,
+//|------------+----------------+---------------+---------------+-----------|                                       |------------+-----------+---------------+---------------+----------------|
+//                                                    8,              7,              0,                    20,           27,         28,
+                                             //|-------------+----------------+---------------|        |------------+-----------+-----------|
+        case 1: //pg up, dwn home, end
             HSV hsv_green = {HSV_GREEN};
             hsv_green.v   = rgb_matrix_config.hsv.v;
             RGB rgb_green = hsv_to_rgb(hsv_green);
             HSV hsv_springgreen = {HSV_SPRINGGREEN};
             hsv_springgreen.v   = rgb_matrix_config.hsv.v;
             RGB rgb_springgreen = hsv_to_rgb(hsv_springgreen);
+
             rgb_matrix_set_color_all(0, 0, 0);
-            rgb_matrix_set_color(left_win, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(left_shift, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(19, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(22, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(34, rgb_green.r, rgb_green.g, rgb_green.b);
-            rgb_matrix_set_color(35, rgb_green.r, rgb_green.g, rgb_green.b);
-            rgb_matrix_set_color(37, rgb_green.r, rgb_green.g, rgb_green.b);
-            rgb_matrix_set_color(44, rgb_green.r, rgb_green.g, rgb_green.b);
-            // these keys are used more so I brightened them
-            rgb_matrix_set_color(38, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(39, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(42, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(43, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(46, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(47, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(48, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
-            rgb_matrix_set_color(49, rgb_springgreen.r, rgb_springgreen.g*5, rgb_springgreen.b);
+            rgb_matrix_set_color(left_win, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(left_shift, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(left_ctrl, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(left_alt, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(23, rgb_gold.r, rgb_gold.g, rgb_gold.b);
+            rgb_matrix_set_color(24, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(31, rgb_red.r, rgb_red.g, rgb_red.b);
+            rgb_matrix_set_color(32, rgb_gold.r, rgb_gold.g, rgb_gold.b);
+
+            rgb_matrix_set_color(22, rgb_green.r, rgb_green.g, rgb_green.b);
+            rgb_matrix_set_color(25, rgb_green.r, rgb_green.g, rgb_green.b);
+            rgb_matrix_set_color(30, rgb_green.r, rgb_green.g, rgb_green.b);
+            rgb_matrix_set_color(33, rgb_green.r, rgb_green.g, rgb_green.b);
+            
+
+            rgb_matrix_set_color(21, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(26, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(29, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
+            rgb_matrix_set_color(34, rgb_springgreen.r, rgb_springgreen.g, rgb_springgreen.b);
             break;
         case 0:
             HSV hsv_blue = {HSV_BLUE};
             hsv_blue.v   = rgb_matrix_config.hsv.v;
             RGB rgb_blue = hsv_to_rgb(hsv_blue);
-            // underglow off
-            rgb_matrix_set_color(0, 0, 0, 0);
-            rgb_matrix_set_color(1, 0, 0, 0);
-            rgb_matrix_set_color(2, 0, 0, 0);
-            rgb_matrix_set_color(3, 0, 0, 0);
-            rgb_matrix_set_color(4, 0, 0, 0);
-            rgb_matrix_set_color(5, 0, 0, 0);
-            rgb_matrix_set_color(32, 0, 0, 0);
-            rgb_matrix_set_color(31, 0, 0, 0);
-            rgb_matrix_set_color(30, 0, 0, 0);
-            rgb_matrix_set_color(29, 0, 0, 0);
-            rgb_matrix_set_color(28, 0, 0, 0);
-            rgb_matrix_set_color(27, 0, 0, 0);
-            rgb_matrix_set_color(26, 0, 0, 0);
+
 
             // mod keys LHS/
             rgb_matrix_set_color(left_win, rgb_blue.r, 0, rgb_blue.b);
             rgb_matrix_set_color(left_shift, rgb_blue.r, 0, rgb_blue.b);
-            rgb_matrix_set_color(19, rgb_blue.r, 0, rgb_blue.b);
-            rgb_matrix_set_color(22, rgb_blue.r, 0, rgb_blue.b);
+            rgb_matrix_set_color(left_ctrl, rgb_blue.r, 0, rgb_blue.b);
+            rgb_matrix_set_color(left_alt, rgb_blue.r, 0, rgb_blue.b);
             // mod keys RHS/
-            rgb_matrix_set_color(38, rgb_blue.r, 0, rgb_blue.b);
-            rgb_matrix_set_color(43, rgb_blue.r, 0, rgb_blue.b);
-            rgb_matrix_set_color(46, rgb_blue.r, 0, rgb_blue.b);
-            rgb_matrix_set_color(49, rgb_blue.r, 0, rgb_blue.b);
-            // /mod keys
+            rgb_matrix_set_color(right_win, rgb_blue.r, 0, rgb_blue.b);
+            rgb_matrix_set_color(right_shift, rgb_blue.r, 0, rgb_blue.b);
+            rgb_matrix_set_color(right_ctrl, rgb_blue.r, 0, rgb_blue.b);
+            rgb_matrix_set_color(right_alt, rgb_blue.r, 0, rgb_blue.b);
             break;
         default:
             break;
@@ -274,8 +279,6 @@ enum {
     DOUBLE_SINGLE_TAP,
     MORE_TAPS
 };
-
-/* Need to get this working::::
 
 static tap dance_state[1];
 
@@ -334,5 +337,3 @@ void dance_0_reset(tap_dance_state_t *state, void *user_data) {
 tap_dance_action_t tap_dance_actions[] = {
         [DANCE_0] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_0, dance_0_finished, dance_0_reset),
 };
-
-*/
